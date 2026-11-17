@@ -126,8 +126,9 @@
     flex:1;
     min-width:0;
   }
-  [data-tab]{ display:none; }
-  [data-tab].tab-active{ display:block; animation:tabin .18s ease; }
+  /* Hide sections of other tabs; active sections keep their own display (flex/grid/none) */
+  [data-tab]:not(.tab-active){ display:none !important; }
+  [data-tab].tab-active{ animation:tabin .18s ease; }
   @keyframes tabin{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
   .tab-empty-hint{ padding:60px 20px; text-align:center; color:var(--ink-soft); font-size:13px; }
 
@@ -292,8 +293,9 @@
   .recur-item .delbtn{ background:none;border:none;color:var(--ink-soft); font-size:14px;cursor:pointer;padding:2px 4px; }
   .recur-empty{font-size:12px;color:var(--ink-soft);}
 
-  .searchrow{ padding:0 20px 12px; display:flex; gap:8px; }
-  .searchrow input{ flex:2; padding:10px 12px; border:1px solid var(--line); border-radius:var(--radius-s); background:var(--bg); color:var(--ink); font-size:13px; }
+  .searchrow{ padding:0 0 12px; display:flex; gap:8px; }
+  .searchrow input, .searchrow select{ min-width:0; }
+  .searchrow input{ flex:2;padding:10px 12px; border:1px solid var(--line); border-radius:var(--radius-s); background:var(--bg); color:var(--ink); font-size:13px; }
   .searchrow select{ flex:1; padding:10px 6px; border:1px solid var(--line); border-radius:var(--radius-s); background:var(--bg); color:var(--ink); font-size:13px; }
 
   .list{ padding:0 20px 40px; flex:1; }
@@ -435,6 +437,30 @@
   button:active, .catchip:active, .quickchip:active, .sidebtn:active{ transform: scale(.95); }
   .entry:active, .goal-item:active, .recur-item:active{ background:var(--bg); }
   input:focus, select:focus{ outline:none; border-color:var(--teal); }
+
+  .goals, .income, .recurring, .debts, .splitbills{ padding-top:18px; }
+
+  /* Phones: side menu becomes a bottom tab bar */
+  @media (max-width: 600px){
+    .layout{ display:block; }
+    .sidenav{
+      position:fixed; left:0; right:0; bottom:0; top:auto;
+      width:auto; max-width:480px; height:auto; margin:0 auto;
+      flex-direction:row; align-items:stretch; justify-content:space-around; gap:2px;
+      padding:6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+      border-right:none; border-top:1px solid var(--line);
+      box-shadow:0 -4px 16px rgba(0,0,0,.04);
+      overflow:visible; z-index:6;
+    }
+    .sidenav-spacer{ display:none; }
+    .sidebtn{ flex:1; width:auto; min-width:0; padding:6px 2px; }
+    .sidebtn .sicon{ font-size:18px; }
+    .sidebtn .slabel{ display:block; font-size:9.5px; }
+    .sidebtn.active{ box-shadow:inset 0 3px 0 var(--gold); }
+    .sidebtn-add{ margin-top:0; }
+    .maincontent{ padding-bottom:calc(72px + env(safe-area-inset-bottom, 0px)); }
+    .toast{ bottom:calc(84px + env(safe-area-inset-bottom, 0px)); }
+  }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
