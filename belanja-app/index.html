@@ -461,6 +461,91 @@
     .maincontent{ padding-bottom:calc(72px + env(safe-area-inset-bottom, 0px)); }
     .toast{ bottom:calc(84px + env(safe-area-inset-bottom, 0px)); }
   }
+
+  /* ===== Glass theme =====
+     Frosted, see-through panels over a soft colour background.
+     Delete this whole block to go back to the flat look. */
+  :root{
+    --glass: rgba(255,255,255,.52);
+    --glass-strong: rgba(255,255,255,.86);
+    --glass-soft: rgba(255,255,255,.34);
+    --glass-border: rgba(255,255,255,.75);
+    --glass-shadow: 0 8px 28px rgba(31,42,34,.10);
+    --glass-blur: blur(18px) saturate(170%);
+    --orb-1: rgba(92,147,133,.55);
+    --orb-2: rgba(217,165,72,.45);
+    --orb-3: rgba(111,164,199,.45);
+    --glass-base: #E7EEE6;
+  }
+  html[data-theme="dark"]{
+    --glass: rgba(24,36,30,.50);
+    --glass-strong: rgba(20,32,26,.90);
+    --glass-soft: rgba(255,255,255,.06);
+    --glass-border: rgba(255,255,255,.12);
+    --glass-shadow: 0 8px 28px rgba(0,0,0,.35);
+    --orb-1: rgba(59,99,87,.70);
+    --orb-2: rgba(184,134,46,.35);
+    --orb-3: rgba(74,124,158,.45);
+    --glass-base: #101814;
+  }
+  body{ background:var(--glass-base); }
+  /* Fixed colour background (a pseudo-element so it also stays put on iPhone) */
+  body::before{
+    content:""; position:fixed; inset:-10%; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(38% 30% at 15% 12%, var(--orb-1), transparent 70%),
+      radial-gradient(34% 28% at 88% 30%, var(--orb-2), transparent 70%),
+      radial-gradient(40% 32% at 30% 78%, var(--orb-3), transparent 70%),
+      radial-gradient(30% 26% at 85% 88%, var(--orb-1), transparent 70%),
+      var(--glass-base);
+    filter:blur(10px);
+  }
+  .app{ background:transparent; border-color:var(--glass-border); box-shadow:none; }
+
+  header, .sidenav{
+    background:var(--glass);
+    -webkit-backdrop-filter:var(--glass-blur); backdrop-filter:var(--glass-blur);
+    border-color:var(--glass-border);
+  }
+  .sidebtn.active{ background:var(--glass-strong); }
+
+  .card, .viewtoggle, .iconbtn, .monthnav button, .quickchip,
+  .searchrow input, .searchrow select, .empty-state .ebtn, .recur-item .delbtn{
+    background:var(--glass);
+    -webkit-backdrop-filter:var(--glass-blur); backdrop-filter:var(--glass-blur);
+    border:1px solid var(--glass-border);
+    box-shadow:var(--glass-shadow);
+  }
+  .card{ border-radius:18px; }
+  .viewtoggle button.active{ box-shadow:0 2px 10px rgba(0,0,0,.18); }
+  .budgetbar, .goal-bar, .debt-bar, .catrow .bar{ background:var(--glass-soft); }
+  .banner{
+    background:rgba(251,239,231,.65);
+    -webkit-backdrop-filter:var(--glass-blur); backdrop-filter:var(--glass-blur);
+    border-radius:var(--radius-m);
+  }
+  html[data-theme="dark"] .banner{ background:rgba(46,36,22,.6); }
+
+  /* Pop-up sheets (Add expense, Settings…) */
+  .sheet-backdrop{ background:rgba(0,0,0,.25); }
+  .sheet{
+    background:var(--glass-strong);
+    -webkit-backdrop-filter:blur(26px) saturate(180%); backdrop-filter:blur(26px) saturate(180%);
+    border:1px solid var(--glass-border); border-bottom:none;
+    box-shadow:0 -10px 40px rgba(0,0,0,.12);
+  }
+  .field input, .field select, .quickadd-row input, .catbudget-row input,
+  .rowfields input, .rowfields select, .catchip, .splitpct, .filebtn, .btn-cancel{
+    background:var(--glass-soft);
+    border-color:var(--glass-border);
+  }
+  .catchip.active, .splitpct.active{ background:var(--ink); }
+
+  .lock-screen{ background:transparent; -webkit-backdrop-filter:blur(30px); backdrop-filter:blur(30px); }
+  .lock-pad button{ background:var(--glass); border-color:var(--glass-border); box-shadow:var(--glass-shadow); }
+  .toast{ -webkit-backdrop-filter:var(--glass-blur); backdrop-filter:var(--glass-blur); }
+  .entry{ border-bottom-color:var(--glass-border); }
+  .entry:active, .goal-item:active, .recur-item:active{ background:var(--glass-soft); }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
@@ -2333,7 +2418,7 @@ function switchTab(tab){
   document.querySelectorAll('[data-tab]').forEach(el=>el.classList.toggle('tab-active', el.dataset.tab === tab));
   window.scrollTo({top:0});
 }
-document.querySelectorAll('.sidebtn').forEach(btn=>{
+document.querySelectorAll('.sidebtn[data-tabbtn]').forEach(btn=>{
   btn.addEventListener('click', ()=>{ switchTab(btn.dataset.tabbtn); buzz(); });
 });
 
